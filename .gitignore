@@ -1,0 +1,36 @@
+# OS & editor cruft
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+
+# Node / package managers
+node_modules/
+pnpm-lock.yaml
+yarn.lock
+*.tsbuildinfo
+
+# Builds
+frontend/dist/
+frontend/.vite/
+
+# Env / secrets
+.env
+.env.*
+
+# Frontend artifacts
+frontend/node_modules/
+frontend/dist/
+frontend/dist-ssr/
+frontend/.vite/
+frontend/.eslintcache
+frontend/.DS_Store
+
+# Testing & coverage
+coverage/
+*.lcov
+
+# Misc
+.vite/
+dist/
