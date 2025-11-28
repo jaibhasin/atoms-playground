@@ -4,6 +4,8 @@ import { useControls } from 'leva'
 import { EffectComposer, Bloom } from '@react-three/postprocessing'
 import AtomVisualization from './components/AtomVisualization'
 import ParticleField from './components/ParticleField'
+import AtomSelector from './components/AtomSelector'
+import { useAtomStore } from './hooks/useAtomStore'
 import './App.css'
 
 function App() {
@@ -12,6 +14,9 @@ function App() {
     glowIntensity: { value: 1.5, min: 0, max: 3, step: 0.1 },
     showParticles: { value: true }
   })
+
+  const currentAtom = useAtomStore((state) => state.currentAtom)
+  const totalElectrons = currentAtom.shells.reduce((sum, shell) => sum + shell.electrons, 0)
 
   return (
     <div style={{ width: '100vw', height: '100vh', background: '#000' }}>
@@ -23,12 +28,18 @@ function App() {
         zIndex: 10,
         fontFamily: 'monospace'
       }}>
-        <h1 style={{ margin: 0, fontSize: '2rem', fontWeight: 'bold' }}>Iron Atom (Fe)</h1>
-        <p style={{ margin: '5px 0', opacity: 0.8 }}>26 Protons • 30 Neutrons • 26 Electrons</p>
+        <h1 style={{ margin: 0, fontSize: '2rem', fontWeight: 'bold' }}>
+          {currentAtom.name} Atom ({currentAtom.symbol})
+        </h1>
+        <p style={{ margin: '5px 0', opacity: 0.8 }}>
+          {currentAtom.atomicNumber} Protons • {currentAtom.neutrons} Neutrons • {totalElectrons} Electrons
+        </p>
         <p style={{ margin: '5px 0', opacity: 0.6, fontSize: '0.9rem' }}>
           Drag to rotate • Scroll to zoom
         </p>
       </div>
+
+      <AtomSelector />
       
       <Canvas camera={{ position: [0, 0, 50], fov: 50 }}>
         <color attach="background" args={['#000']} />

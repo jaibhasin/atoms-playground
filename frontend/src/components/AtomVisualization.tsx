@@ -3,7 +3,7 @@ import { useFrame } from '@react-three/fiber'
 import { Group } from 'three'
 import Nucleus from './Nucleus'
 import ElectronShells from './ElectronShells'
-import { ironAtom } from '../data/iron'
+import { useAtomStore } from '../hooks/useAtomStore'
 
 interface AtomVisualizationProps {
   rotationSpeed: number
@@ -12,6 +12,7 @@ interface AtomVisualizationProps {
 
 export default function AtomVisualization({ rotationSpeed, glowIntensity }: AtomVisualizationProps) {
   const groupRef = useRef<Group>(null)
+  const currentAtom = useAtomStore((state) => state.currentAtom)
 
   useFrame(() => {
     if (groupRef.current) {
@@ -22,12 +23,12 @@ export default function AtomVisualization({ rotationSpeed, glowIntensity }: Atom
   return (
     <group ref={groupRef}>
       <Nucleus 
-        protons={ironAtom.atomicNumber} 
-        neutrons={ironAtom.neutrons}
+        protons={currentAtom.atomicNumber} 
+        neutrons={currentAtom.neutrons}
         glowIntensity={glowIntensity}
       />
       <ElectronShells 
-        shells={ironAtom.shells} 
+        shells={currentAtom.shells} 
         rotationSpeed={rotationSpeed}
         glowIntensity={glowIntensity}
       />
