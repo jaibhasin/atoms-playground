@@ -1,13 +1,16 @@
 import { Canvas } from '@react-three/fiber'
-import { OrbitControls, Stars } from '@react-three/drei'
+import { OrbitControls, Stars, Environment } from '@react-three/drei'
 import { useControls } from 'leva'
+import { EffectComposer, Bloom } from '@react-three/postprocessing'
 import AtomVisualization from './components/AtomVisualization'
+import ParticleField from './components/ParticleField'
 import './App.css'
 
 function App() {
-  const { rotationSpeed, glowIntensity } = useControls({
+  const { rotationSpeed, glowIntensity, showParticles } = useControls({
     rotationSpeed: { value: 1, min: 0, max: 3, step: 0.1 },
-    glowIntensity: { value: 1.5, min: 0, max: 3, step: 0.1 }
+    glowIntensity: { value: 1.5, min: 0, max: 3, step: 0.1 },
+    showParticles: { value: true }
   })
 
   return (
@@ -22,21 +25,37 @@ function App() {
       }}>
         <h1 style={{ margin: 0, fontSize: '2rem', fontWeight: 'bold' }}>Iron Atom (Fe)</h1>
         <p style={{ margin: '5px 0', opacity: 0.8 }}>26 Protons • 30 Neutrons • 26 Electrons</p>
+        <p style={{ margin: '5px 0', opacity: 0.6, fontSize: '0.9rem' }}>
+          Drag to rotate • Scroll to zoom
+        </p>
       </div>
       
       <Canvas camera={{ position: [0, 0, 50], fov: 50 }}>
         <color attach="background" args={['#000']} />
         <Stars radius={300} depth={60} count={5000} factor={7} fade speed={1} />
+        <Environment preset="night" />
         
         <ambientLight intensity={0.3} />
         <pointLight position={[10, 10, 10]} intensity={0.5} />
+        <pointLight position={[-10, -10, -10]} intensity={0.3} color="#4488ff" />
         
+        {showParticles && <ParticleField />}
         <AtomVisualization rotationSpeed={rotationSpeed} glowIntensity={glowIntensity} />
+        
+        <EffectComposer>
+          <Bloom 
+            intensity={0.5} 
+            luminanceThreshold={0.2} 
+            luminanceSmoothing={0.9}
+          />
+        </EffectComposer>
         
         <OrbitControls 
           enablePan={false}
           minDistance={20}
           maxDistance={100}
+          autoRotate
+          autoRotateSpeed={0.5}
         />
       </Canvas>
     </div>
