@@ -1,7 +1,7 @@
+import { Suspense } from 'react'
 import { Canvas } from '@react-three/fiber'
-import { OrbitControls, Stars, Environment } from '@react-three/drei'
+import { OrbitControls, Stars } from '@react-three/drei'
 import { useControls } from 'leva'
-import { EffectComposer, Bloom } from '@react-three/postprocessing'
 import AtomVisualization from './components/AtomVisualization'
 import ParticleField from './components/ParticleField'
 import AtomSelector from './components/AtomSelector'
@@ -43,23 +43,16 @@ function App() {
       
       <Canvas camera={{ position: [0, 0, 50], fov: 50 }}>
         <color attach="background" args={['#000']} />
-        <Stars radius={300} depth={60} count={5000} factor={7} fade speed={1} />
-        <Environment preset="night" />
+        <Suspense fallback={null}>
+          <Stars radius={300} depth={60} count={5000} factor={7} fade speed={1} />
+        </Suspense>
         
-        <ambientLight intensity={0.3} />
-        <pointLight position={[10, 10, 10]} intensity={0.5} />
-        <pointLight position={[-10, -10, -10]} intensity={0.3} color="#4488ff" />
+        <ambientLight intensity={0.5} />
+        <pointLight position={[10, 10, 10]} intensity={1} />
+        <pointLight position={[-10, -10, -10]} intensity={0.5} color="#4488ff" />
         
         {showParticles && <ParticleField />}
         <AtomVisualization rotationSpeed={rotationSpeed} glowIntensity={glowIntensity} />
-        
-        <EffectComposer>
-          <Bloom 
-            intensity={0.5} 
-            luminanceThreshold={0.2} 
-            luminanceSmoothing={0.9}
-          />
-        </EffectComposer>
         
         <OrbitControls 
           enablePan={false}
