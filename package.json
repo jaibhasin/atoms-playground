@@ -1,0 +1,14 @@
+{
+  "name": "atoms-and-molecules",
+  "version": "1.0.0",
+  "description": "Interactive 3D atomic visualization",
+  "scripts": {
+    "dev:frontend": "cd frontend && npm run dev",
+    "dev:backend": "cd backend && npm run dev",
+    "install:all": "npm install --prefix frontend && npm install --prefix backend",
+    "build": "cd frontend && npm run build"
+  },
+  "keywords": ["atoms", "3d", "visualization", "threejs", "react"],
+  "author": "",
+  "license": "MIT"
+}
