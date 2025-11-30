@@ -17,9 +17,14 @@ function App() {
 
   const currentAtom = useAtomStore((state) => state.currentAtom)
   const totalElectrons = currentAtom.shells.reduce((sum, shell) => sum + shell.electrons, 0)
+
+  const shellNames = ['K', 'L', 'M', 'N', 'O', 'P', 'Q'] as const
   const shellDescription = currentAtom.shells
-    .map((shell, index) => `Shell ${index + 1}: ${shell.electrons} electrons`)
-    .join(', ')
+    .map((shell, index) => {
+      const label = shellNames[index] ?? `Shell ${index + 1}`
+      return `${label} shell: ${shell.electrons} electrons`
+    })
+    .join(' • ')
 
   return (
     <div style={{ width: '100vw', height: '100vh', background: '#000' }}>
@@ -73,8 +78,8 @@ function App() {
             <span>Neutron</span>
           </div>
         </div>
-        <p style={{ margin: '8px 0 0', opacity: 0.7, fontSize: '0.8rem', maxWidth: '340px' }}>
-          Electrons per shell (inner to outer): {shellDescription}
+        <p style={{ margin: '8px 0 0', opacity: 0.7, fontSize: '0.8rem', maxWidth: '360px' }}>
+          Electron shells (inner to outer): {shellDescription}
         </p>
       </div>
 
