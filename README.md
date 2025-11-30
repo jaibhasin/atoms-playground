@@ -61,3 +61,8 @@ API runs on http://localhost:3001
 - **Scroll** - Zoom in/out
 - **Leva Panel** - Adjust rotation speed, glow, and particles
 - **Element Buttons** - Switch between different atoms
+
+## Future Ideas
+
+- **Photoelectric Effect Simulation** – Add a controllable light source that shines on the atom. Let users vary light frequency and intensity to see when electrons are emitted from the material, illustrating threshold frequency and kinetic energy of emitted electrons.
+- **Element Info Card** – Show a compact information panel for each element (category, period/group, electron configuration, common uses, fun facts) that updates when you switch atoms, tying the visualization to real-world chemistry context.
