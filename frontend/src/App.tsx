@@ -37,6 +37,39 @@ function App() {
         <p style={{ margin: '5px 0', opacity: 0.6, fontSize: '0.9rem' }}>
           Drag to rotate • Scroll to zoom
         </p>
+        <div style={{
+          marginTop: '6px',
+          display: 'flex',
+          gap: '12px',
+          alignItems: 'center',
+          fontSize: '0.8rem',
+          opacity: 0.85,
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <span
+              style={{
+                width: '10px',
+                height: '10px',
+                borderRadius: '50%',
+                background: '#ff2255',
+                display: 'inline-block',
+              }}
+            />
+            <span>Proton</span>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <span
+              style={{
+                width: '10px',
+                height: '10px',
+                borderRadius: '50%',
+                background: '#2255ff',
+                display: 'inline-block',
+              }}
+            />
+            <span>Neutron</span>
+          </div>
+        </div>
       </div>
 
       <AtomSelector />

@@ -1,4 +1,4 @@
-import { AtomProfile, ElectronShell } from './iron'
+import type { AtomProfile } from './iron'
 
 const BOHR_RADIUS = 5
 const BASE_ANGULAR_VELOCITY = 0.45

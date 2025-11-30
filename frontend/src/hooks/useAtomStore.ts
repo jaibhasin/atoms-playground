@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import { AtomProfile } from '../data/iron'
+import type { AtomProfile } from '../data/iron'
 import { atomsDatabase } from '../data/atoms'
 
 interface AtomStore {

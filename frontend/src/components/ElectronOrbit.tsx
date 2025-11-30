@@ -1,7 +1,7 @@
 import { useRef, useMemo } from 'react'
 import { useFrame } from '@react-three/fiber'
 import { Group, Vector3 } from 'three'
-import { ElectronShell } from '../data/iron'
+import type { ElectronShell } from '../data/iron'
 
 interface ElectronOrbitProps {
   shell: ElectronShell
