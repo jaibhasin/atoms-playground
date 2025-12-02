@@ -55,6 +55,7 @@ export default function Nucleus({ protons, neutrons, glowIntensity }: NucleusPro
             metalness={0.9}
             roughness={0.1}
             toneMapped={false}
+            envMapIntensity={1}
           />
           {/* Individual particle glow */}
           <mesh>

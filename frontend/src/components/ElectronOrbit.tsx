@@ -56,6 +56,7 @@ export default function ElectronOrbit({ shell, shellIndex, rotationSpeed, glowIn
               metalness={0.5}
               roughness={0.1}
               toneMapped={false}
+              envMapIntensity={1}
             />
 
             {/* Electron glow */}
