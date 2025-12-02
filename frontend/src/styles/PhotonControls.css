@@ -90,6 +90,7 @@
   border-radius: 4px;
   outline: none;
   -webkit-appearance: none;
+  appearance: none;
   background: rgba(100, 100, 255, 0.2);
   cursor: pointer;
 }
