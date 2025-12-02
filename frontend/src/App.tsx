@@ -1,6 +1,7 @@
 import { Suspense, useEffect } from 'react'
 import { Canvas } from '@react-three/fiber'
 import { OrbitControls, Stars } from '@react-three/drei'
+import { EffectComposer, Bloom } from '@react-three/postprocessing'
 import { useControls } from 'leva'
 import AtomVisualization from './components/AtomVisualization'
 import ParticleField from './components/ParticleField'
@@ -148,6 +149,15 @@ function App() {
         {showParticles && <ParticleField />}
         <AtomVisualization rotationSpeed={rotationSpeed} glowIntensity={glowIntensity} />
         {photonState.photonModeEnabled && <PhotonBeam />}
+
+        <EffectComposer>
+          <Bloom
+            luminanceThreshold={0.2}
+            mipmapBlur
+            intensity={glowIntensity * 0.8}
+            radius={0.8}
+          />
+        </EffectComposer>
 
         <OrbitControls
           enablePan={false}

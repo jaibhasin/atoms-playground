@@ -12,7 +12,7 @@ interface ElectronOrbitProps {
 
 export default function ElectronOrbit({ shell, shellIndex, rotationSpeed, glowIntensity }: ElectronOrbitProps) {
   const orbitRef = useRef<Group>(null)
-  
+
   const electronPositions = useMemo(() => {
     const positions: Vector3[] = []
     for (let i = 0; i < shell.electrons; i++) {
@@ -37,9 +37,9 @@ export default function ElectronOrbit({ shell, shellIndex, rotationSpeed, glowIn
       {/* Orbit ring */}
       <mesh rotation={[Math.PI / 2, 0, 0]}>
         <torusGeometry args={[shell.radius, 0.02, 16, 100]} />
-        <meshBasicMaterial 
-          color={orbitColor} 
-          transparent 
+        <meshBasicMaterial
+          color={orbitColor}
+          transparent
           opacity={0.3}
         />
       </mesh>
@@ -49,18 +49,19 @@ export default function ElectronOrbit({ shell, shellIndex, rotationSpeed, glowIn
         {electronPositions.map((pos, i) => (
           <mesh key={i} position={pos}>
             <sphereGeometry args={[0.25, 16, 16]} />
-            <meshStandardMaterial 
+            <meshStandardMaterial
               color={orbitColor}
               emissive={orbitColor}
               emissiveIntensity={glowIntensity}
               metalness={0.5}
               roughness={0.1}
+              toneMapped={false}
             />
-            
+
             {/* Electron glow */}
             <mesh>
               <sphereGeometry args={[0.4, 16, 16]} />
-              <meshBasicMaterial 
+              <meshBasicMaterial
                 color={orbitColor}
                 transparent
                 opacity={0.3 * glowIntensity}
