@@ -1,4 +1,12 @@
 import type { AtomProfile } from './iron'
+import {
+  hydrogenEnergyData,
+  heliumEnergyData,
+  carbonEnergyData,
+  oxygenEnergyData,
+  ironEnergyData,
+  goldEnergyData
+} from './energy-levels'
 
 const BOHR_RADIUS = 5
 const BASE_ANGULAR_VELOCITY = 0.45
@@ -11,9 +19,10 @@ export const atomsDatabase: Record<string, AtomProfile> = {
     neutrons: 0,
     shells: [
       { electrons: 1, radius: BOHR_RADIUS * 1, angularVelocity: BASE_ANGULAR_VELOCITY, tilt: 0 }
-    ]
+    ],
+    energyData: hydrogenEnergyData
   },
-  
+
   helium: {
     name: 'Helium',
     symbol: 'He',
@@ -21,9 +30,10 @@ export const atomsDatabase: Record<string, AtomProfile> = {
     neutrons: 2,
     shells: [
       { electrons: 2, radius: BOHR_RADIUS * 1, angularVelocity: BASE_ANGULAR_VELOCITY, tilt: 0 }
-    ]
+    ],
+    energyData: heliumEnergyData
   },
-  
+
   carbon: {
     name: 'Carbon',
     symbol: 'C',
@@ -32,9 +42,10 @@ export const atomsDatabase: Record<string, AtomProfile> = {
     shells: [
       { electrons: 2, radius: BOHR_RADIUS * 1, angularVelocity: BASE_ANGULAR_VELOCITY / 1 ** 2, tilt: 0.15 },
       { electrons: 4, radius: BOHR_RADIUS * 1.8, angularVelocity: BASE_ANGULAR_VELOCITY / 2 ** 2, tilt: -0.25 }
-    ]
+    ],
+    energyData: carbonEnergyData
   },
-  
+
   oxygen: {
     name: 'Oxygen',
     symbol: 'O',
@@ -43,9 +54,10 @@ export const atomsDatabase: Record<string, AtomProfile> = {
     shells: [
       { electrons: 2, radius: BOHR_RADIUS * 1, angularVelocity: BASE_ANGULAR_VELOCITY / 1 ** 2, tilt: 0.15 },
       { electrons: 6, radius: BOHR_RADIUS * 1.8, angularVelocity: BASE_ANGULAR_VELOCITY / 2 ** 2, tilt: -0.25 }
-    ]
+    ],
+    energyData: oxygenEnergyData
   },
-  
+
   iron: {
     name: 'Iron',
     symbol: 'Fe',
@@ -56,9 +68,10 @@ export const atomsDatabase: Record<string, AtomProfile> = {
       { electrons: 8, radius: BOHR_RADIUS * 1.8, angularVelocity: BASE_ANGULAR_VELOCITY / 2 ** 2, tilt: -0.25 },
       { electrons: 14, radius: BOHR_RADIUS * 2.6, angularVelocity: BASE_ANGULAR_VELOCITY / 3 ** 2, tilt: 0.35 },
       { electrons: 2, radius: BOHR_RADIUS * 3.6, angularVelocity: BASE_ANGULAR_VELOCITY / 4 ** 2, tilt: -0.45 }
-    ]
+    ],
+    energyData: ironEnergyData
   },
-  
+
   gold: {
     name: 'Gold',
     symbol: 'Au',
@@ -71,7 +84,8 @@ export const atomsDatabase: Record<string, AtomProfile> = {
       { electrons: 32, radius: BOHR_RADIUS * 2.8, angularVelocity: BASE_ANGULAR_VELOCITY / 4 ** 2, tilt: -0.4 },
       { electrons: 18, radius: BOHR_RADIUS * 3.6, angularVelocity: BASE_ANGULAR_VELOCITY / 5 ** 2, tilt: 0.5 },
       { electrons: 1, radius: BOHR_RADIUS * 4.4, angularVelocity: BASE_ANGULAR_VELOCITY / 6 ** 2, tilt: -0.6 }
-    ]
+    ],
+    energyData: goldEnergyData
   }
 }
 
