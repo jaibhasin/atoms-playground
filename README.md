@@ -62,7 +62,18 @@ API runs on http://localhost:3001
 - **Leva Panel** - Adjust rotation speed, glow, and particles
 - **Element Buttons** - Switch between different atoms
 
-## Future Ideas
+## Future Enhancements
+
+### Educational Features
+
+- **Interactive Periodic Table** – Implement a full periodic table interface for element selection with hover previews, color-coding by element categories (metals, non-metals, noble gases, etc.), and filtering by properties (atomic number, period, group).
+
+- **Comparison Mode** – Display two atoms side-by-side to highlight structural differences, show size comparison visualization, and provide a property comparison table for educational analysis.
+
+- **Chemical Bonding Visualization** – Show how atoms bond to form molecules (H₂O, CO₂, CH₄, etc.) with animated electron sharing in covalent bonds, ionic bonds with electron transfer visualization, and molecular geometry based on VSEPR theory.
+
+### Physics Simulations
 
 - **Photoelectric Effect Simulation** – Add a controllable light source that shines on the atom. Let users vary light frequency and intensity to see when electrons are emitted from the material, illustrating threshold frequency and kinetic energy of emitted electrons.
-- **Element Info Card** – Show a compact information panel for each element (category, period/group, electron configuration, common uses, fun facts) that updates when you switch atoms, tying the visualization to real-world chemistry context.
+
+- **Radioactive Decay Simulation** – Animate alpha, beta, and gamma decay processes, show how the nucleus changes during decay, display half-life information, and create decay chains for unstable isotopes.
