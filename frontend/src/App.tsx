@@ -1,6 +1,7 @@
 import { Suspense, useEffect } from 'react'
 import { Canvas } from '@react-three/fiber'
-import { OrbitControls, Stars } from '@react-three/drei'
+import { OrbitControls, Stars, Environment } from '@react-three/drei'
+import { EffectComposer, Bloom } from '@react-three/postprocessing'
 import { useControls } from 'leva'
 import AtomVisualization from './components/AtomVisualization'
 import ParticleField from './components/ParticleField'
@@ -16,7 +17,7 @@ function App() {
   const { rotationSpeed, glowIntensity, showParticles } = useControls({
     rotationSpeed: { value: 1, min: 0, max: 3, step: 0.1 },
     glowIntensity: { value: 1.5, min: 0, max: 3, step: 0.1 },
-    showParticles: { value: true }
+    showParticles: { value: false }
   })
 
   const currentAtom = useAtomStore((state) => state.currentAtom)
@@ -99,41 +100,50 @@ function App() {
         </p>
       </div>
 
-      {/* Photon Mode Toggle */}
-      <button
-        onClick={togglePhotonMode}
-        style={{
-          position: 'absolute',
-          top: 20,
-          right: photonState.photonModeEnabled ? 360 : 20,
-          padding: '12px 20px',
-          background: photonState.photonModeEnabled
-            ? 'rgba(100, 255, 200, 0.3)'
-            : 'rgba(100, 100, 255, 0.2)',
-          border: photonState.photonModeEnabled
-            ? '2px solid rgba(100, 255, 200, 0.6)'
-            : '2px solid rgba(100, 100, 255, 0.4)',
-          borderRadius: '8px',
-          color: '#fff',
-          fontSize: '0.9rem',
-          cursor: 'pointer',
-          fontFamily: 'monospace',
-          fontWeight: 'bold',
-          zIndex: 101,
-          transition: 'all 0.3s ease',
-          boxShadow: photonState.photonModeEnabled
-            ? '0 0 20px rgba(100, 255, 200, 0.4)'
-            : 'none',
-        }}
-      >
-        {photonState.photonModeEnabled ? '⚛️ Photon Mode ON' : '🔬 Enable Photon Mode'}
-      </button>
-
       {/* Photon Mode UI */}
       {photonState.photonModeEnabled && <PhotonControls />}
       {photonState.photonModeEnabled && <PhotonInfoPanel />}
 
-      <AtomSelector />
+      {/* Controls Container */}
+      <div style={{
+        position: 'absolute',
+        top: 20,
+        right: 20,
+        zIndex: 101,
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'flex-end',
+        gap: '12px'
+      }}>
+        <AtomSelector />
+
+        {/* Photon Mode Toggle */}
+        <button
+          onClick={togglePhotonMode}
+          style={{
+            padding: '8px 16px',
+            background: photonState.photonModeEnabled
+              ? 'rgba(100, 255, 200, 0.3)'
+              : 'rgba(100, 100, 255, 0.2)',
+            border: photonState.photonModeEnabled
+              ? '2px solid rgba(100, 255, 200, 0.6)'
+              : '2px solid rgba(100, 100, 255, 0.4)',
+            borderRadius: '8px',
+            color: '#fff',
+            fontSize: '0.8rem',
+            cursor: 'pointer',
+            fontFamily: 'monospace',
+            fontWeight: 'bold',
+            transition: 'all 0.3s ease',
+            boxShadow: photonState.photonModeEnabled
+              ? '0 0 20px rgba(100, 255, 200, 0.4)'
+              : 'none',
+            whiteSpace: 'nowrap'
+          }}
+        >
+          {photonState.photonModeEnabled ? '⚛️ Photon Mode ON' : '🔬 Enable Photon Mode'}
+        </button>
+      </div>
 
       <Canvas camera={{ position: [0, 0, 50], fov: 50 }}>
         <color attach="background" args={['#000']} />
@@ -148,6 +158,17 @@ function App() {
         {showParticles && <ParticleField />}
         <AtomVisualization rotationSpeed={rotationSpeed} glowIntensity={glowIntensity} />
         {photonState.photonModeEnabled && <PhotonBeam />}
+
+        <EffectComposer>
+          <Bloom
+            luminanceThreshold={0.2}
+            mipmapBlur
+            intensity={glowIntensity * 0.8}
+            radius={0.8}
+          />
+        </EffectComposer>
+
+        <Environment preset="city" />
 
         <OrbitControls
           enablePan={false}

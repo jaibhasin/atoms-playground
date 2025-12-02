@@ -5,7 +5,7 @@ import * as THREE from 'three'
 
 export default function ParticleField() {
   const ref = useRef<THREE.Points>(null)
-  
+
   const particles = useMemo(() => {
     const positions = new Float32Array(1000 * 3)
     for (let i = 0; i < 1000; i++) {
@@ -28,11 +28,12 @@ export default function ParticleField() {
     <Points ref={ref} positions={particles} stride={3}>
       <PointMaterial
         transparent
-        color="#4488ff"
+        color="#88ccff"
         size={0.1}
         sizeAttenuation
         depthWrite={false}
-        opacity={0.6}
+        opacity={0.8}
+        toneMapped={false}
       />
     </Points>
   )

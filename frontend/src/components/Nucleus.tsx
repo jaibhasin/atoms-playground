@@ -10,27 +10,27 @@ interface NucleusProps {
 
 export default function Nucleus({ protons, neutrons, glowIntensity }: NucleusProps) {
   const groupRef = useRef<Group>(null)
-  
+
   const particles = useMemo(() => {
     const positions: { pos: Vector3; isProton: boolean }[] = []
     const total = protons + neutrons
     const radius = Math.max(1.5, Math.log(total) * 0.8)
-    
+
     // Fibonacci sphere distribution for even particle placement
     for (let i = 0; i < total; i++) {
       const phi = Math.acos(-1 + (2 * i) / total)
       const theta = Math.sqrt(total * Math.PI) * phi
-      
+
       const x = radius * Math.cos(theta) * Math.sin(phi)
       const y = radius * Math.sin(theta) * Math.sin(phi)
       const z = radius * Math.cos(phi)
-      
+
       positions.push({
         pos: new Vector3(x, y, z),
         isProton: i < protons
       })
     }
-    
+
     return positions
   }, [protons, neutrons])
 
@@ -48,41 +48,43 @@ export default function Nucleus({ protons, neutrons, glowIntensity }: NucleusPro
       {particles.map((particle, i) => (
         <mesh key={i} position={particle.pos}>
           <sphereGeometry args={[0.35, 16, 16]} />
-          <meshStandardMaterial 
+          <meshStandardMaterial
             color={particle.isProton ? '#ff2255' : '#2255ff'}
             emissive={particle.isProton ? '#ff2255' : '#2255ff'}
-            emissiveIntensity={0.6 * glowIntensity}
+            emissiveIntensity={0.8 * glowIntensity}
             metalness={0.9}
             roughness={0.1}
+            toneMapped={false}
+            envMapIntensity={1}
           />
           {/* Individual particle glow */}
           <mesh>
             <sphereGeometry args={[0.5, 12, 12]} />
-            <meshBasicMaterial 
+            <meshBasicMaterial
               color={particle.isProton ? '#ff4477' : '#4477ff'}
-              transparent 
+              transparent
               opacity={0.2 * glowIntensity}
             />
           </mesh>
         </mesh>
       ))}
-      
+
       {/* Nucleus energy field */}
       <mesh>
         <sphereGeometry args={[nucleusRadius, 32, 32]} />
-        <meshBasicMaterial 
-          color="#ff44aa" 
-          transparent 
+        <meshBasicMaterial
+          color="#ff44aa"
+          transparent
           opacity={0.08 * glowIntensity}
         />
       </mesh>
-      
+
       {/* Inner core glow */}
       <mesh>
         <sphereGeometry args={[nucleusRadius * 0.6, 32, 32]} />
-        <meshBasicMaterial 
-          color="#ffaa44" 
-          transparent 
+        <meshBasicMaterial
+          color="#ffaa44"
+          transparent
           opacity={0.15 * glowIntensity}
         />
       </mesh>
