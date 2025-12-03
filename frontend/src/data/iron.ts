@@ -1,3 +1,5 @@
+import type { AtomEnergyData } from './energy-levels'
+
 export type ElectronShell = {
   electrons: number
   radius: number
@@ -11,7 +13,7 @@ export type AtomProfile = {
   atomicNumber: number
   neutrons: number
   shells: ElectronShell[]
-  energyData?: import('./energy-levels').AtomEnergyData  // Optional energy data for photon mode
+  energyData?: AtomEnergyData  // Optional energy data for photon mode
 }
 
 const BOHR_RADIUS = 5
