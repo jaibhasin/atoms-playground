@@ -1,4 +1,4 @@
-import { useRef, useEffect } from 'react'
+import { useRef } from 'react'
 import { useFrame } from '@react-three/fiber'
 import { useAtomStore } from '../hooks/useAtomStore'
 import * as THREE from 'three'
@@ -38,7 +38,7 @@ function EjectedElectronParticle({ ejectedElectron, onComplete }: EjectedElectro
     const trailPoints = useRef<THREE.Vector3[]>([])
     const maxTrailLength = 20
 
-    useFrame((state) => {
+    useFrame(() => {
         if (!meshRef.current) return
 
         const elapsed = Date.now() - startTime.current
@@ -89,15 +89,13 @@ function EjectedElectronParticle({ ejectedElectron, onComplete }: EjectedElectro
             </mesh>
 
             {/* Trail */}
-            <line ref={trailRef}>
-                <bufferGeometry />
-                <lineBasicMaterial
-                    color="#ff4444"
-                    transparent
-                    opacity={0.5}
-                    linewidth={2}
-                />
-            </line>
+            {trailPoints.current.length > 1 && (
+                <primitive object={new THREE.Line(
+                    new THREE.BufferGeometry().setFromPoints(trailPoints.current),
+                    new THREE.LineBasicMaterial({ color: '#ff4444', transparent: true, opacity: 0.5 })
+                )} />
+            )}
         </group>
     )
 }
+```

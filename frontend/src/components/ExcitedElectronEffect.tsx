@@ -1,4 +1,4 @@
-import { useRef, useEffect } from 'react'
+import { useRef } from 'react'
 import { useFrame } from '@react-three/fiber'
 import { useAtomStore } from '../hooks/useAtomStore'
 import * as THREE from 'three'
@@ -46,7 +46,6 @@ function ExcitedElectronParticle({ excitedElectron, currentAtom, onComplete }: E
     const startTime = useRef(Date.now())
     const EXCITATION_DURATION = 2000 // 2 seconds in excited state
 
-    const fromShell = currentAtom.shells[excitedElectron.fromShell - 1]
     const toShell = currentAtom.shells[excitedElectron.toShell - 1]
 
     useFrame((state) => {
