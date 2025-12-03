@@ -43,9 +43,11 @@ function App() {
       setCurrentEffect(effect)
 
       // Automatically trigger electron ejection for photoelectric effect
-      if (effect === 'photoelectric') {
+      if (effect === 'photoelectric' && currentAtom.energyData) {
         // Trigger ejection every 2 seconds while light is on
         const interval = setInterval(() => {
+          if (!currentAtom.energyData) return
+
           const randomAngle = Math.random() * Math.PI * 2
           const randomPolar = Math.random() * Math.PI
           const speed = Math.sqrt(photonEnergy - currentAtom.energyData.ionizationEnergy) / 10
