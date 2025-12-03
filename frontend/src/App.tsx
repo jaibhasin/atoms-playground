@@ -24,7 +24,7 @@ function App() {
   })
 
   const currentAtom = useAtomStore((state) => state.currentAtom)
-  const { photonState, togglePhotonMode, setCurrentEffect } = useAtomStore()
+  const { photonState, togglePhotonMode, setCurrentEffect, addEjectedElectron } = useAtomStore()
   const totalElectrons = currentAtom.shells.reduce((sum, shell) => sum + shell.electrons, 0)
 
   const shellNames = ['K', 'L', 'M', 'N', 'O', 'P', 'Q'] as const
@@ -35,16 +35,42 @@ function App() {
     })
     .join(' • ')
 
-  // Update current effect based on wavelength
+  // Update current effect based on wavelength and trigger animations
   useEffect(() => {
     if (photonState.photonModeEnabled && photonState.isLightOn && currentAtom.energyData) {
       const photonEnergy = wavelengthToEnergy(photonState.wavelength)
       const effect = determineInteractionType(photonEnergy, currentAtom.energyData)
       setCurrentEffect(effect)
+
+      // Automatically trigger electron ejection for photoelectric effect
+      if (effect === 'photoelectric') {
+        // Trigger ejection every 2 seconds while light is on
+        const interval = setInterval(() => {
+          const randomAngle = Math.random() * Math.PI * 2
+          const randomPolar = Math.random() * Math.PI
+          const speed = Math.sqrt(photonEnergy - currentAtom.energyData.ionizationEnergy) / 10
+
+          addEjectedElectron({
+            id: `electron-${Date.now()}-${Math.random()}`,
+            shellIndex: 0,
+            electronIndex: 0,
+            kineticEnergy: photonEnergy - currentAtom.energyData.ionizationEnergy,
+            position: [0, 0, 0],
+            velocity: [
+              Math.sin(randomPolar) * Math.cos(randomAngle) * speed,
+              Math.sin(randomPolar) * Math.sin(randomAngle) * speed,
+              Math.cos(randomPolar) * speed
+            ],
+            timestamp: Date.now()
+          })
+        }, 2000)
+
+        return () => clearInterval(interval)
+      }
     } else {
       setCurrentEffect('none')
     }
-  }, [photonState.wavelength, photonState.isLightOn, photonState.photonModeEnabled, currentAtom, setCurrentEffect])
+  }, [photonState.wavelength, photonState.isLightOn, photonState.photonModeEnabled, currentAtom, setCurrentEffect, addEjectedElectron])
 
   return (
     <div style={{ width: '100vw', height: '100vh', background: '#000' }}>
