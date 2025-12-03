@@ -98,4 +98,3 @@ function EjectedElectronParticle({ ejectedElectron, onComplete }: EjectedElectro
         </group>
     )
 }
-```
