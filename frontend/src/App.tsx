@@ -8,6 +8,10 @@ import AtomSelector from './components/AtomSelector'
 import PhotonControls from './components/PhotonControls'
 import PhotonInfoPanel from './components/PhotonInfoPanel'
 import PhotonBeam from './components/PhotonBeam'
+import EnergyLevelDiagram from './components/EnergyLevelDiagram'
+import SpectrumDisplay from './components/SpectrumDisplay'
+import ExcitedElectronEffect from './components/ExcitedElectronEffect'
+import PhotoelectricEffect from './components/PhotoelectricEffect'
 import { useAtomStore } from './hooks/useAtomStore'
 import { wavelengthToEnergy, determineInteractionType } from './utils/photon-physics'
 import './App.css'
@@ -132,6 +136,8 @@ function App() {
       {/* Photon Mode UI */}
       {photonState.photonModeEnabled && <PhotonControls />}
       {photonState.photonModeEnabled && <PhotonInfoPanel />}
+      {photonState.photonModeEnabled && <EnergyLevelDiagram />}
+      {photonState.photonModeEnabled && <SpectrumDisplay />}
 
       <AtomSelector />
 
@@ -148,6 +154,8 @@ function App() {
         {showParticles && <ParticleField />}
         <AtomVisualization rotationSpeed={rotationSpeed} glowIntensity={glowIntensity} />
         {photonState.photonModeEnabled && <PhotonBeam />}
+        {photonState.photonModeEnabled && <ExcitedElectronEffect />}
+        {photonState.photonModeEnabled && <PhotoelectricEffect />}
 
         <OrbitControls
           enablePan={false}
