@@ -10,7 +10,7 @@ export default function AtomSelector() {
   return (
     <div style={{
       position: 'absolute',
-      top: 20,
+      bottom: 20,
       right: 20,
       zIndex: 10,
       display: 'flex',
@@ -21,7 +21,7 @@ export default function AtomSelector() {
       {atoms.map((atomKey) => {
         const atom = atomsDatabase[atomKey]
         const isActive = atom.symbol === currentAtom.symbol
-        
+
         return (
           <button
             key={atomKey}

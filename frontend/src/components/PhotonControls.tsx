@@ -25,11 +25,10 @@ export default function PhotonControls() {
     const region = getWavelengthRegion(wavelength)
     const [r, g, b] = wavelengthToRGB(wavelength)
 
-    // Preset wavelengths
+    // Preset wavelengths - better coverage for photoelectric effect
     const presets = [
-        { name: 'Gamma', wavelength: 0.01 },
-        { name: 'X-ray', wavelength: 1 },
-        { name: 'UV', wavelength: 200 },
+        { name: 'X-ray', wavelength: 0.1 },
+        { name: 'UV', wavelength: 100 },
         { name: 'Violet', wavelength: 400 },
         { name: 'Blue', wavelength: 470 },
         { name: 'Green', wavelength: 520 },
@@ -37,6 +36,20 @@ export default function PhotonControls() {
         { name: 'Red', wavelength: 650 },
         { name: 'IR', wavelength: 900 },
     ]
+
+    // Use logarithmic scale for better control
+    const minLog = Math.log(0.1) // 0.1nm (X-ray)
+    const maxLog = Math.log(1000) // 1000nm (IR)
+    const scale = (maxLog - minLog) / 100
+
+    const handleSliderChange = (value: number) => {
+        const wavelength = Math.exp(minLog + scale * value)
+        setWavelength(wavelength)
+    }
+
+    const getSliderValue = () => {
+        return (Math.log(wavelength) - minLog) / scale
+    }
 
     return (
         <div className="photon-controls">
@@ -60,11 +73,11 @@ export default function PhotonControls() {
                 </label>
                 <input
                     type="range"
-                    min="0.01"
-                    max="1000"
-                    step="0.1"
-                    value={wavelength}
-                    onChange={(e) => setWavelength(parseFloat(e.target.value))}
+                    min="0"
+                    max="100"
+                    step="0.5"
+                    value={getSliderValue()}
+                    onChange={(e) => handleSliderChange(parseFloat(e.target.value))}
                     className="wavelength-slider"
                     style={{
                         background: `linear-gradient(to right, 
@@ -73,8 +86,11 @@ export default function PhotonControls() {
                     }}
                 />
                 <div className="wavelength-scale">
-                    <span>0.01nm</span>
-                    <span>1000nm</span>
+                    <span>0.1nm (X-ray)</span>
+                    <span>1000nm (IR)</span>
+                </div>
+                <div style={{ fontSize: '0.7rem', color: '#888', marginTop: '4px', fontStyle: 'italic' }}>
+                    💡 Tip: Use X-ray preset (0.1nm) for photoelectric effect
                 </div>
             </div>
 
