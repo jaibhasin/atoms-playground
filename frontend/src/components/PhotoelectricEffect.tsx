@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import { useFrame } from '@react-three/fiber'
 import { useAtomStore } from '../hooks/useAtomStore'
 import * as THREE from 'three'
@@ -27,16 +27,14 @@ interface EjectedElectronParticleProps {
 
 function EjectedElectronParticle({ ejectedElectron, onComplete }: EjectedElectronParticleProps) {
     const meshRef = useRef<THREE.Mesh>(null)
-    const trailRef = useRef<THREE.Line>(null)
+    const burstRef = useRef<THREE.Mesh>(null)
+    const shockwaveRef = useRef<THREE.Mesh>(null)
     const startTime = useRef(Date.now())
     const EJECTION_DURATION = 3000 // 3 seconds before fading
+    const [trailPoints] = useState<THREE.Vector3[]>([])
 
     const velocity = ejectedElectron.velocity || [1, 1, 1]
     const initialPosition = ejectedElectron.position || [0, 0, 0]
-
-    // Trail points
-    const trailPoints = useRef<THREE.Vector3[]>([])
-    const maxTrailLength = 20
 
     useFrame(() => {
         if (!meshRef.current) return
@@ -49,52 +47,112 @@ function EjectedElectronParticle({ ejectedElectron, onComplete }: EjectedElectro
             return
         }
 
-        // Move electron outward
+        // Move electron outward with acceleration
         const t = elapsed / 1000
-        meshRef.current.position.x = initialPosition[0] + velocity[0] * t * 5
-        meshRef.current.position.y = initialPosition[1] + velocity[1] * t * 5
-        meshRef.current.position.z = initialPosition[2] + velocity[2] * t * 5
+        const accel = 1 + t * 0.5 // Accelerates over time
+        meshRef.current.position.x = initialPosition[0] + velocity[0] * t * 8 * accel
+        meshRef.current.position.y = initialPosition[1] + velocity[1] * t * 8 * accel
+        meshRef.current.position.z = initialPosition[2] + velocity[2] * t * 8 * accel
 
         // Fade out
         const material = meshRef.current.material as THREE.MeshStandardMaterial
         material.opacity = 1 - progress
 
+        // Pulse effect
+        const pulse = Math.sin(t * 10) * 0.2 + 1
+        meshRef.current.scale.setScalar(pulse)
+
         // Update trail
-        trailPoints.current.push(meshRef.current.position.clone())
-        if (trailPoints.current.length > maxTrailLength) {
-            trailPoints.current.shift()
+        if (trailPoints.length < 30) {
+            trailPoints.push(meshRef.current.position.clone())
         }
 
-        // Update trail geometry
-        if (trailRef.current && trailPoints.current.length > 1) {
-            const geometry = new THREE.BufferGeometry().setFromPoints(trailPoints.current)
-            trailRef.current.geometry = geometry
+        // Initial burst effect (first 0.5 seconds)
+        if (burstRef.current && t < 0.5) {
+            const burstScale = (t / 0.5) * 8
+            burstRef.current.scale.setScalar(burstScale)
+            const burstMat = burstRef.current.material as THREE.MeshBasicMaterial
+            burstMat.opacity = 1 - (t / 0.5)
+        }
+
+        // Shockwave ring effect (first 1 second)
+        if (shockwaveRef.current && t < 1) {
+            const ringScale = (t / 1) * 15
+            shockwaveRef.current.scale.set(ringScale, ringScale, 1)
+            const ringMat = shockwaveRef.current.material as THREE.MeshBasicMaterial
+            ringMat.opacity = (1 - (t / 1)) * 0.5
         }
     })
 
     return (
         <group>
-            {/* Ejected electron */}
-            <mesh ref={meshRef} position={initialPosition as [number, number, number]}>
-                <sphereGeometry args={[0.3, 16, 16]} />
-                <meshStandardMaterial
-                    color="#ff4444"
-                    emissive="#ff2222"
-                    emissiveIntensity={3}
+            {/* Initial flash burst */}
+            <mesh ref={burstRef} position={initialPosition as [number, number, number]}>
+                <sphereGeometry args={[1, 16, 16]} />
+                <meshBasicMaterial
+                    color="#ff0000"
                     transparent
                     opacity={1}
                     toneMapped={false}
                 />
-                <pointLight color="#ff4444" intensity={3} distance={3} />
             </mesh>
 
-            {/* Trail */}
-            {trailPoints.current.length > 1 && (
-                <primitive object={new THREE.Line(
-                    new THREE.BufferGeometry().setFromPoints(trailPoints.current),
-                    new THREE.LineBasicMaterial({ color: '#ff4444', transparent: true, opacity: 0.5 })
-                )} />
+            {/* Expanding shockwave ring */}
+            <mesh ref={shockwaveRef} position={initialPosition as [number, number, number]} rotation={[Math.PI / 2, 0, 0]}>
+                <ringGeometry args={[0.8, 1, 32]} />
+                <meshBasicMaterial
+                    color="#ff4444"
+                    transparent
+                    opacity={0.5}
+                    side={THREE.DoubleSide}
+                    toneMapped={false}
+                />
+            </mesh>
+
+            {/* Ejected electron with trail */}
+            <mesh ref={meshRef} position={initialPosition as [number, number, number]}>
+                <sphereGeometry args={[0.4, 16, 16]} />
+                <meshStandardMaterial
+                    color="#ff4444"
+                    emissive="#ff0000"
+                    emissiveIntensity={5}
+                    transparent
+                    opacity={1}
+                    toneMapped={false}
+                />
+                {/* Bright point light */}
+                <pointLight color="#ff0000" intensity={8} distance={5} decay={2} />
+            </mesh>
+
+            {/* Particle trail */}
+            {trailPoints.length > 1 && (
+                <primitive
+                    object={
+                        new THREE.Line(
+                            new THREE.BufferGeometry().setFromPoints(trailPoints),
+                            new THREE.LineBasicMaterial({
+                                color: '#ff4444',
+                                transparent: true,
+                                opacity: 0.6,
+                                linewidth: 3,
+                            })
+                        )
+                    }
+                />
             )}
+
+            {/* Spark particles along trail */}
+            {trailPoints.slice(-10).map((point, i) => (
+                <mesh key={i} position={point.toArray() as [number, number, number]}>
+                    <sphereGeometry args={[0.1, 8, 8]} />
+                    <meshBasicMaterial
+                        color="#ffaa00"
+                        transparent
+                        opacity={0.8 - i * 0.08}
+                        toneMapped={false}
+                    />
+                </mesh>
+            ))}
         </group>
     )
 }
