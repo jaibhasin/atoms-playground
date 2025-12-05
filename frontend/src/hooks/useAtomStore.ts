@@ -54,6 +54,37 @@ export interface PhotonState {
   photonModeEnabled: boolean
 }
 
+// ==================== DECAY STATE ====================
+
+export type DecayType = 'alpha' | 'beta-minus' | 'beta-plus' | 'gamma'
+
+export interface DecayEvent {
+  id: string
+  type: DecayType
+  parentName: string
+  daughterName: string
+  energyReleased: number
+  timestamp: number
+}
+
+export interface DecayParticle {
+  id: string
+  type: DecayType
+  position: [number, number, number]
+  velocity: [number, number, number]
+  timestamp: number
+}
+
+export interface DecayState {
+  decayModeEnabled: boolean
+  isDecaying: boolean
+  currentDecayType: DecayType | null
+  decayProgress: number          // 0-1 animation progress
+  activeParticles: DecayParticle[]
+  decayHistory: DecayEvent[]
+  originalAtomKey: string | null // To reset back to original
+}
+
 interface AtomStore {
   currentAtom: AtomProfile
   setAtom: (symbol: string) => void
@@ -79,6 +110,16 @@ interface AtomStore {
   // Ionization actions
   incrementIonization: () => void
   resetAtom: () => void
+
+  // Decay state and actions
+  decayState: DecayState
+  toggleDecayMode: () => void
+  triggerDecay: (type: DecayType, daughterAtomKey: string, event: DecayEvent) => void
+  setDecayProgress: (progress: number) => void
+  addDecayParticle: (particle: DecayParticle) => void
+  removeDecayParticle: (id: string) => void
+  completeDecay: () => void
+  resetDecay: () => void
 }
 
 const initialPhotonState: PhotonState = {
@@ -94,6 +135,16 @@ const initialPhotonState: PhotonState = {
   showSpectrum: false,
   showCalculations: true,
   photonModeEnabled: false,
+}
+
+const initialDecayState: DecayState = {
+  decayModeEnabled: false,
+  isDecaying: false,
+  currentDecayType: null,
+  decayProgress: 0,
+  activeParticles: [],
+  decayHistory: [],
+  originalAtomKey: null,
 }
 
 export const useAtomStore = create<AtomStore>((set) => ({
@@ -240,4 +291,89 @@ export const useAtomStore = create<AtomStore>((set) => ({
         emittedPhotons: []
       }
     })),
+
+  // Decay state and actions
+  decayState: initialDecayState,
+
+  toggleDecayMode: () =>
+    set((state) => {
+      const enabling = !state.decayState.decayModeEnabled
+      return {
+        decayState: {
+          ...state.decayState,
+          decayModeEnabled: enabling,
+          // Store original atom key when enabling
+          originalAtomKey: enabling ? Object.keys(atomsDatabase).find(
+            key => atomsDatabase[key] === state.currentAtom
+          ) || null : state.decayState.originalAtomKey
+        }
+      }
+    }),
+
+  triggerDecay: (type: DecayType, daughterAtomKey: string, event: DecayEvent) =>
+    set((state) => {
+      const daughterAtom = atomsDatabase[daughterAtomKey]
+      if (!daughterAtom) return state
+
+      return {
+        currentAtom: daughterAtom,
+        decayState: {
+          ...state.decayState,
+          isDecaying: true,
+          currentDecayType: type,
+          decayProgress: 0,
+          decayHistory: [...state.decayState.decayHistory, event]
+        }
+      }
+    }),
+
+  setDecayProgress: (progress: number) =>
+    set((state) => ({
+      decayState: {
+        ...state.decayState,
+        decayProgress: progress
+      }
+    })),
+
+  addDecayParticle: (particle: DecayParticle) =>
+    set((state) => ({
+      decayState: {
+        ...state.decayState,
+        activeParticles: [...state.decayState.activeParticles, particle]
+      }
+    })),
+
+  removeDecayParticle: (id: string) =>
+    set((state) => ({
+      decayState: {
+        ...state.decayState,
+        activeParticles: state.decayState.activeParticles.filter(p => p.id !== id)
+      }
+    })),
+
+  completeDecay: () =>
+    set((state) => ({
+      decayState: {
+        ...state.decayState,
+        isDecaying: false,
+        currentDecayType: null,
+        decayProgress: 0,
+        activeParticles: []
+      }
+    })),
+
+  resetDecay: () =>
+    set((state) => {
+      const originalKey = state.decayState.originalAtomKey
+      const originalAtom = originalKey ? atomsDatabase[originalKey] : state.currentAtom
+
+      return {
+        currentAtom: originalAtom || state.currentAtom,
+        decayState: {
+          ...initialDecayState,
+          decayModeEnabled: state.decayState.decayModeEnabled,
+          originalAtomKey: originalKey
+        }
+      }
+    }),
 }))

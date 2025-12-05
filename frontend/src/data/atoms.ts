@@ -86,6 +86,113 @@ export const atomsDatabase: Record<string, AtomProfile> = {
       { electrons: 1, radius: BOHR_RADIUS * 4.4, angularVelocity: BASE_ANGULAR_VELOCITY / 6 ** 2, tilt: -0.6 }
     ],
     energyData: goldEnergyData
+  },
+
+  // ==================== RADIOACTIVE ISOTOPES ====================
+
+  // Uranium-238: Heavy radioactive element, alpha emitter
+  'uranium-238': {
+    name: 'Uranium-238',
+    symbol: 'U',
+    atomicNumber: 92,
+    neutrons: 146,
+    isRadioactive: true,
+    massNumber: 238,
+    shells: [
+      { electrons: 2, radius: BOHR_RADIUS * 0.6, angularVelocity: BASE_ANGULAR_VELOCITY / 1 ** 2, tilt: 0.1 },
+      { electrons: 8, radius: BOHR_RADIUS * 1.0, angularVelocity: BASE_ANGULAR_VELOCITY / 2 ** 2, tilt: -0.15 },
+      { electrons: 18, radius: BOHR_RADIUS * 1.5, angularVelocity: BASE_ANGULAR_VELOCITY / 3 ** 2, tilt: 0.2 },
+      { electrons: 32, radius: BOHR_RADIUS * 2.0, angularVelocity: BASE_ANGULAR_VELOCITY / 4 ** 2, tilt: -0.25 },
+      { electrons: 21, radius: BOHR_RADIUS * 2.6, angularVelocity: BASE_ANGULAR_VELOCITY / 5 ** 2, tilt: 0.3 },
+      { electrons: 9, radius: BOHR_RADIUS * 3.2, angularVelocity: BASE_ANGULAR_VELOCITY / 6 ** 2, tilt: -0.35 },
+      { electrons: 2, radius: BOHR_RADIUS * 3.8, angularVelocity: BASE_ANGULAR_VELOCITY / 7 ** 2, tilt: 0.4 }
+    ]
+  },
+
+  // Thorium-234: Daughter of U-238
+  'thorium-234': {
+    name: 'Thorium-234',
+    symbol: 'Th',
+    atomicNumber: 90,
+    neutrons: 144,
+    isRadioactive: true,
+    massNumber: 234,
+    shells: [
+      { electrons: 2, radius: BOHR_RADIUS * 0.6, angularVelocity: BASE_ANGULAR_VELOCITY / 1 ** 2, tilt: 0.1 },
+      { electrons: 8, radius: BOHR_RADIUS * 1.0, angularVelocity: BASE_ANGULAR_VELOCITY / 2 ** 2, tilt: -0.15 },
+      { electrons: 18, radius: BOHR_RADIUS * 1.5, angularVelocity: BASE_ANGULAR_VELOCITY / 3 ** 2, tilt: 0.2 },
+      { electrons: 32, radius: BOHR_RADIUS * 2.0, angularVelocity: BASE_ANGULAR_VELOCITY / 4 ** 2, tilt: -0.25 },
+      { electrons: 18, radius: BOHR_RADIUS * 2.6, angularVelocity: BASE_ANGULAR_VELOCITY / 5 ** 2, tilt: 0.3 },
+      { electrons: 10, radius: BOHR_RADIUS * 3.2, angularVelocity: BASE_ANGULAR_VELOCITY / 6 ** 2, tilt: -0.35 },
+      { electrons: 2, radius: BOHR_RADIUS * 3.8, angularVelocity: BASE_ANGULAR_VELOCITY / 7 ** 2, tilt: 0.4 }
+    ]
+  },
+
+  // Radium-226: Discovered by Marie Curie
+  'radium-226': {
+    name: 'Radium-226',
+    symbol: 'Ra',
+    atomicNumber: 88,
+    neutrons: 138,
+    isRadioactive: true,
+    massNumber: 226,
+    shells: [
+      { electrons: 2, radius: BOHR_RADIUS * 0.6, angularVelocity: BASE_ANGULAR_VELOCITY / 1 ** 2, tilt: 0.1 },
+      { electrons: 8, radius: BOHR_RADIUS * 1.0, angularVelocity: BASE_ANGULAR_VELOCITY / 2 ** 2, tilt: -0.15 },
+      { electrons: 18, radius: BOHR_RADIUS * 1.5, angularVelocity: BASE_ANGULAR_VELOCITY / 3 ** 2, tilt: 0.2 },
+      { electrons: 32, radius: BOHR_RADIUS * 2.0, angularVelocity: BASE_ANGULAR_VELOCITY / 4 ** 2, tilt: -0.25 },
+      { electrons: 18, radius: BOHR_RADIUS * 2.6, angularVelocity: BASE_ANGULAR_VELOCITY / 5 ** 2, tilt: 0.3 },
+      { electrons: 8, radius: BOHR_RADIUS * 3.2, angularVelocity: BASE_ANGULAR_VELOCITY / 6 ** 2, tilt: -0.35 },
+      { electrons: 2, radius: BOHR_RADIUS * 3.8, angularVelocity: BASE_ANGULAR_VELOCITY / 7 ** 2, tilt: 0.4 }
+    ]
+  },
+
+  // Carbon-14: Used in radiocarbon dating
+  'carbon-14': {
+    name: 'Carbon-14',
+    symbol: 'C',
+    atomicNumber: 6,
+    neutrons: 8,
+    isRadioactive: true,
+    massNumber: 14,
+    shells: [
+      { electrons: 2, radius: BOHR_RADIUS * 1, angularVelocity: BASE_ANGULAR_VELOCITY / 1 ** 2, tilt: 0.15 },
+      { electrons: 4, radius: BOHR_RADIUS * 1.8, angularVelocity: BASE_ANGULAR_VELOCITY / 2 ** 2, tilt: -0.25 }
+    ]
+  },
+
+  // Cobalt-60: Medical isotope, gamma emitter
+  'cobalt-60': {
+    name: 'Cobalt-60',
+    symbol: 'Co',
+    atomicNumber: 27,
+    neutrons: 33,
+    isRadioactive: true,
+    massNumber: 60,
+    shells: [
+      { electrons: 2, radius: BOHR_RADIUS * 0.8, angularVelocity: BASE_ANGULAR_VELOCITY / 1 ** 2, tilt: 0.1 },
+      { electrons: 8, radius: BOHR_RADIUS * 1.4, angularVelocity: BASE_ANGULAR_VELOCITY / 2 ** 2, tilt: -0.2 },
+      { electrons: 15, radius: BOHR_RADIUS * 2.0, angularVelocity: BASE_ANGULAR_VELOCITY / 3 ** 2, tilt: 0.25 },
+      { electrons: 2, radius: BOHR_RADIUS * 2.8, angularVelocity: BASE_ANGULAR_VELOCITY / 4 ** 2, tilt: -0.3 }
+    ]
+  },
+
+  // Polonium-210: Highly radioactive
+  'polonium-210': {
+    name: 'Polonium-210',
+    symbol: 'Po',
+    atomicNumber: 84,
+    neutrons: 126,
+    isRadioactive: true,
+    massNumber: 210,
+    shells: [
+      { electrons: 2, radius: BOHR_RADIUS * 0.6, angularVelocity: BASE_ANGULAR_VELOCITY / 1 ** 2, tilt: 0.1 },
+      { electrons: 8, radius: BOHR_RADIUS * 1.0, angularVelocity: BASE_ANGULAR_VELOCITY / 2 ** 2, tilt: -0.15 },
+      { electrons: 18, radius: BOHR_RADIUS * 1.5, angularVelocity: BASE_ANGULAR_VELOCITY / 3 ** 2, tilt: 0.2 },
+      { electrons: 32, radius: BOHR_RADIUS * 2.0, angularVelocity: BASE_ANGULAR_VELOCITY / 4 ** 2, tilt: -0.25 },
+      { electrons: 18, radius: BOHR_RADIUS * 2.6, angularVelocity: BASE_ANGULAR_VELOCITY / 5 ** 2, tilt: 0.3 },
+      { electrons: 6, radius: BOHR_RADIUS * 3.2, angularVelocity: BASE_ANGULAR_VELOCITY / 6 ** 2, tilt: -0.35 }
+    ]
   }
 }
 

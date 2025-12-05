@@ -12,6 +12,9 @@ import EnergyLevelDiagram from './components/EnergyLevelDiagram'
 import SpectrumDisplay from './components/SpectrumDisplay'
 import ExcitedElectronEffect from './components/ExcitedElectronEffect'
 import PhotoelectricEffect from './components/PhotoelectricEffect'
+import DecayControls from './components/DecayControls'
+import DecayInfoPanel from './components/DecayInfoPanel'
+import DecayAnimation from './components/DecayAnimation'
 import { useAtomStore } from './hooks/useAtomStore'
 import { wavelengthToEnergy, determineInteractionType } from './utils/photon-physics'
 import './App.css'
@@ -24,7 +27,7 @@ function App() {
   })
 
   const currentAtom = useAtomStore((state) => state.currentAtom)
-  const { photonState, togglePhotonMode, setCurrentEffect, addEjectedElectron, incrementIonization, resetAtom } = useAtomStore()
+  const { photonState, togglePhotonMode, setCurrentEffect, addEjectedElectron, incrementIonization, resetAtom, decayState, toggleDecayMode } = useAtomStore()
   const baseElectrons = currentAtom.shells.reduce((sum, shell) => sum + shell.electrons, 0)
   const currentElectrons = baseElectrons - photonState.ionizationCount
   const ionCharge = photonState.ionizationCount
@@ -246,6 +249,40 @@ function App() {
       {photonState.photonModeEnabled && <EnergyLevelDiagram />}
       {photonState.photonModeEnabled && <SpectrumDisplay />}
 
+      {/* Decay Mode Toggle */}
+      <button
+        onClick={toggleDecayMode}
+        style={{
+          position: 'absolute',
+          top: 60,
+          right: decayState.decayModeEnabled ? 340 : (photonState.photonModeEnabled ? 360 : 20),
+          padding: '12px 20px',
+          background: decayState.decayModeEnabled
+            ? 'linear-gradient(135deg, rgba(255, 200, 0, 0.3), rgba(255, 100, 0, 0.3))'
+            : 'rgba(255, 200, 0, 0.15)',
+          border: decayState.decayModeEnabled
+            ? '2px solid rgba(255, 200, 0, 0.6)'
+            : '2px solid rgba(255, 200, 0, 0.3)',
+          borderRadius: '8px',
+          color: '#fff',
+          fontSize: '0.9rem',
+          cursor: 'pointer',
+          fontFamily: 'monospace',
+          fontWeight: 'bold',
+          zIndex: 101,
+          transition: 'all 0.3s ease',
+          boxShadow: decayState.decayModeEnabled
+            ? '0 0 25px rgba(255, 200, 0, 0.4)'
+            : 'none',
+        }}
+      >
+        {decayState.decayModeEnabled ? '☢️ Decay Mode ON' : '☢️ Enable Decay Mode'}
+      </button>
+
+      {/* Decay Mode UI */}
+      {decayState.decayModeEnabled && <DecayControls />}
+      {decayState.decayModeEnabled && <DecayInfoPanel />}
+
       <AtomSelector />
 
       <Canvas camera={{ position: [0, 0, 50], fov: 50 }}>
@@ -263,6 +300,9 @@ function App() {
         {photonState.photonModeEnabled && <PhotonBeam />}
         {photonState.photonModeEnabled && <ExcitedElectronEffect />}
         {photonState.photonModeEnabled && <PhotoelectricEffect />}
+
+        {/* Decay Animations */}
+        {decayState.decayModeEnabled && <DecayAnimation />}
 
         <OrbitControls
           enablePan={false}

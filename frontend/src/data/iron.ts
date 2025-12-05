@@ -14,6 +14,8 @@ export type AtomProfile = {
   neutrons: number
   shells: ElectronShell[]
   energyData?: AtomEnergyData  // Optional energy data for photon mode
+  isRadioactive?: boolean      // True for radioactive isotopes
+  massNumber?: number          // A = protons + neutrons (for isotopes)
 }
 
 const BOHR_RADIUS = 5
