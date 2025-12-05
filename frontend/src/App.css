@@ -13,3 +13,18 @@ body {
   width: 100vw;
   height: 100vh;
 }
+
+/* Pulse animation for ionization badge */
+@keyframes pulse {
+
+  0%,
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 20px rgba(255, 107, 107, 0.5);
+  }
+
+  50% {
+    transform: scale(1.05);
+    box-shadow: 0 0 30px rgba(255, 107, 107, 0.8);
+  }
+}

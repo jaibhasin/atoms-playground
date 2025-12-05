@@ -42,6 +42,9 @@ export interface PhotonState {
   ejectedElectrons: EjectedElectron[]
   emittedPhotons: EmittedPhoton[]
 
+  // Ionization state - tracks permanently ejected electrons
+  ionizationCount: number      // Number of electrons permanently removed from the atom
+
   // Display options
   showEnergyDiagram: boolean
   showSpectrum: boolean
@@ -72,6 +75,10 @@ interface AtomStore {
   toggleCalculations: () => void
   togglePhotonMode: () => void
   resetPhotonState: () => void
+
+  // Ionization actions
+  incrementIonization: () => void
+  resetAtom: () => void
 }
 
 const initialPhotonState: PhotonState = {
@@ -82,6 +89,7 @@ const initialPhotonState: PhotonState = {
   excitedElectrons: [],
   ejectedElectrons: [],
   emittedPhotons: [],
+  ionizationCount: 0,
   showEnergyDiagram: false,
   showSpectrum: false,
   showCalculations: true,
@@ -93,7 +101,17 @@ export const useAtomStore = create<AtomStore>((set) => ({
   setAtom: (symbol: string) => {
     const atom = atomsDatabase[symbol.toLowerCase()]
     if (atom) {
-      set({ currentAtom: atom })
+      set((state) => ({
+        currentAtom: atom,
+        // Reset ionization when switching atoms
+        photonState: {
+          ...state.photonState,
+          ionizationCount: 0,
+          ejectedElectrons: [],
+          excitedElectrons: [],
+          emittedPhotons: []
+        }
+      }))
     }
   },
 
@@ -202,4 +220,24 @@ export const useAtomStore = create<AtomStore>((set) => ({
 
   resetPhotonState: () =>
     set({ photonState: initialPhotonState }),
+
+  // Ionization actions
+  incrementIonization: () =>
+    set((state) => ({
+      photonState: {
+        ...state.photonState,
+        ionizationCount: state.photonState.ionizationCount + 1
+      }
+    })),
+
+  resetAtom: () =>
+    set((state) => ({
+      photonState: {
+        ...state.photonState,
+        ionizationCount: 0,
+        ejectedElectrons: [],
+        excitedElectrons: [],
+        emittedPhotons: []
+      }
+    })),
 }))

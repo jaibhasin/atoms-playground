@@ -24,8 +24,10 @@ function App() {
   })
 
   const currentAtom = useAtomStore((state) => state.currentAtom)
-  const { photonState, togglePhotonMode, setCurrentEffect, addEjectedElectron } = useAtomStore()
-  const totalElectrons = currentAtom.shells.reduce((sum, shell) => sum + shell.electrons, 0)
+  const { photonState, togglePhotonMode, setCurrentEffect, addEjectedElectron, incrementIonization, resetAtom } = useAtomStore()
+  const baseElectrons = currentAtom.shells.reduce((sum, shell) => sum + shell.electrons, 0)
+  const currentElectrons = baseElectrons - photonState.ionizationCount
+  const ionCharge = photonState.ionizationCount
 
   const shellNames = ['K', 'L', 'M', 'N', 'O', 'P', 'Q'] as const
   const shellDescription = currentAtom.shells
@@ -44,9 +46,14 @@ function App() {
 
       // Automatically trigger electron ejection for photoelectric effect
       if (effect === 'photoelectric' && currentAtom.energyData) {
-        // Trigger ejection every 2 seconds while light is on
+        // Trigger ejection every 2 seconds while light is on (only if electrons remain)
         const interval = setInterval(() => {
           if (!currentAtom.energyData) return
+
+          // Check if there are electrons left to eject
+          const state = useAtomStore.getState()
+          const remainingElectrons = baseElectrons - state.photonState.ionizationCount
+          if (remainingElectrons <= 0) return
 
           const randomAngle = Math.random() * Math.PI * 2
           const randomPolar = Math.random() * Math.PI
@@ -65,6 +72,9 @@ function App() {
             ],
             timestamp: Date.now()
           })
+
+          // Increment ionization count - this electron is permanently gone
+          incrementIonization()
         }, 2000)
 
         return () => clearInterval(interval)
@@ -72,7 +82,7 @@ function App() {
     } else {
       setCurrentEffect('none')
     }
-  }, [photonState.wavelength, photonState.isLightOn, photonState.photonModeEnabled, currentAtom, setCurrentEffect, addEjectedElectron])
+  }, [photonState.wavelength, photonState.isLightOn, photonState.photonModeEnabled, currentAtom, setCurrentEffect, addEjectedElectron, incrementIonization, baseElectrons])
 
   return (
     <div style={{ width: '100vw', height: '100vh', background: '#000' }}>
@@ -84,12 +94,81 @@ function App() {
         zIndex: 10,
         fontFamily: 'monospace'
       }}>
-        <h1 style={{ margin: 0, fontSize: '2rem', fontWeight: 'bold' }}>
+        <h1 style={{ margin: 0, fontSize: '2rem', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '10px' }}>
           {currentAtom.name} Atom ({currentAtom.symbol})
+          {ionCharge > 0 && (
+            <span style={{
+              background: 'linear-gradient(135deg, #ff6b6b, #ffd93d)',
+              color: '#000',
+              padding: '4px 12px',
+              borderRadius: '20px',
+              fontSize: '1rem',
+              fontWeight: 'bold',
+              animation: 'pulse 1.5s ease-in-out infinite',
+              boxShadow: '0 0 20px rgba(255, 107, 107, 0.5)',
+            }}>
+              {ionCharge === 1 ? '⁺' : ionCharge === 2 ? '²⁺' : ionCharge === 3 ? '³⁺' : `${ionCharge}⁺`} ION
+            </span>
+          )}
         </h1>
-        <p style={{ margin: '5px 0', opacity: 0.8 }}>
-          {currentAtom.atomicNumber} Protons • {currentAtom.neutrons} Neutrons • {totalElectrons} Electrons
+        <p style={{ margin: '5px 0', opacity: 0.8, display: 'flex', alignItems: 'center', gap: '8px' }}>
+          {currentAtom.atomicNumber} Protons • {currentAtom.neutrons} Neutrons •
+          <span style={{
+            color: ionCharge > 0 ? '#ff6b6b' : '#fff',
+            fontWeight: ionCharge > 0 ? 'bold' : 'normal',
+            transition: 'all 0.3s ease'
+          }}>
+            {currentElectrons} Electrons
+          </span>
+          {ionCharge > 0 && (
+            <span style={{ opacity: 0.6, fontSize: '0.85rem' }}>
+              ({ionCharge} ejected)
+            </span>
+          )}
         </p>
+
+        {/* Ionization Status Panel */}
+        {ionCharge > 0 && (
+          <div style={{
+            marginTop: '10px',
+            padding: '12px 16px',
+            background: 'linear-gradient(135deg, rgba(255, 107, 107, 0.2), rgba(255, 217, 61, 0.1))',
+            border: '1px solid rgba(255, 107, 107, 0.4)',
+            borderRadius: '10px',
+            maxWidth: '320px',
+          }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+              <span style={{ color: '#ff6b6b', fontWeight: 'bold' }}>⚡ Ionized State</span>
+              <button
+                onClick={resetAtom}
+                style={{
+                  background: 'rgba(100, 255, 150, 0.2)',
+                  border: '1px solid rgba(100, 255, 150, 0.5)',
+                  color: '#64ff96',
+                  padding: '4px 12px',
+                  borderRadius: '6px',
+                  cursor: 'pointer',
+                  fontSize: '0.75rem',
+                  fontFamily: 'monospace',
+                  transition: 'all 0.2s ease',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = 'rgba(100, 255, 150, 0.4)'
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = 'rgba(100, 255, 150, 0.2)'
+                }}
+              >
+                🔄 Reset Atom
+              </button>
+            </div>
+            <p style={{ margin: 0, fontSize: '0.8rem', opacity: 0.8 }}>
+              This atom has lost {ionCharge} electron{ionCharge > 1 ? 's' : ''} and now carries a +{ionCharge} charge.
+              {currentElectrons === 0 && ' Fully ionized - no more electrons to eject!'}
+            </p>
+          </div>
+        )}
+
         <p style={{ margin: '5px 0', opacity: 0.6, fontSize: '0.9rem' }}>
           Drag to rotate • Scroll to zoom
         </p>
