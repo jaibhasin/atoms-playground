@@ -161,6 +161,19 @@ export const useAtomStore = create<AtomStore>((set) => ({
           ejectedElectrons: [],
           excitedElectrons: [],
           emittedPhotons: []
+        },
+        // Preserve decayModeEnabled but reset other decay state
+        decayState: {
+          ...state.decayState,
+          isDecaying: false,
+          currentDecayType: null,
+          decayProgress: 0,
+          activeParticles: [],
+          decayHistory: [],
+          // Update originalAtomKey to the new atom for reset functionality
+          originalAtomKey: state.decayState.decayModeEnabled ?
+            Object.keys(atomsDatabase).find(key => atomsDatabase[key] === atom) || null
+            : state.decayState.originalAtomKey
         }
       }))
     }
