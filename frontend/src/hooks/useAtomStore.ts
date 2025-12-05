@@ -83,6 +83,11 @@ export interface DecayState {
   activeParticles: DecayParticle[]
   decayHistory: DecayEvent[]
   originalAtomKey: string | null // To reset back to original
+
+  // Time warp for auto-decay simulation
+  autoDecayEnabled: boolean      // Whether auto-decay is on
+  timeSpeed: number              // Years per second (1, 100, 1000000, etc.)
+  simulatedYears: number         // Total simulated years elapsed
 }
 
 interface AtomStore {
@@ -120,6 +125,11 @@ interface AtomStore {
   removeDecayParticle: (id: string) => void
   completeDecay: () => void
   resetDecay: () => void
+
+  // Time warp actions
+  toggleAutoDecay: () => void
+  setTimeSpeed: (speed: number) => void
+  addSimulatedTime: (years: number) => void
 }
 
 const initialPhotonState: PhotonState = {
@@ -145,6 +155,9 @@ const initialDecayState: DecayState = {
   activeParticles: [],
   decayHistory: [],
   originalAtomKey: null,
+  autoDecayEnabled: false,
+  timeSpeed: 1000000,        // Default: 1 million years per second
+  simulatedYears: 0,
 }
 
 export const useAtomStore = create<AtomStore>((set) => ({
@@ -389,4 +402,30 @@ export const useAtomStore = create<AtomStore>((set) => ({
         }
       }
     }),
+
+  // Time warp actions
+  toggleAutoDecay: () =>
+    set((state) => ({
+      decayState: {
+        ...state.decayState,
+        autoDecayEnabled: !state.decayState.autoDecayEnabled,
+        simulatedYears: 0  // Reset when toggling
+      }
+    })),
+
+  setTimeSpeed: (speed: number) =>
+    set((state) => ({
+      decayState: {
+        ...state.decayState,
+        timeSpeed: speed
+      }
+    })),
+
+  addSimulatedTime: (years: number) =>
+    set((state) => ({
+      decayState: {
+        ...state.decayState,
+        simulatedYears: state.decayState.simulatedYears + years
+      }
+    })),
 }))

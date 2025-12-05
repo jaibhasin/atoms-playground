@@ -15,6 +15,7 @@ import PhotoelectricEffect from './components/PhotoelectricEffect'
 import DecayControls from './components/DecayControls'
 import DecayInfoPanel from './components/DecayInfoPanel'
 import DecayAnimation from './components/DecayAnimation'
+import TimeWarpControl from './components/TimeWarpControl'
 import { useAtomStore } from './hooks/useAtomStore'
 import { wavelengthToEnergy, determineInteractionType } from './utils/photon-physics'
 import './App.css'
@@ -282,6 +283,7 @@ function App() {
       {/* Decay Mode UI */}
       {decayState.decayModeEnabled && <DecayControls />}
       {decayState.decayModeEnabled && <DecayInfoPanel />}
+      {decayState.decayModeEnabled && <TimeWarpControl />}
 
       <AtomSelector />
 
